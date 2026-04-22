@@ -1,721 +1,705 @@
-<!DOCTYPE index.html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.5">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Battlecard: Antavo Enterprise Loyalty</title>
+
+    <!-- Chosen Palette: Executive Slate & Teal (Backgrounds: bg-slate-50, Primary: bg-slate-800, Accents: text-teal-600, text-blue-600, clean white content areas) -->
+    <!-- Application Structure Plan: A dashboard layout with a sticky sidebar for navigation and a main content area. This structure allows C-suite executives to quickly jump between high-level overviews, product specifics, pricing, and tactical competitive strategies without losing context. Information is chunked into logical tabs: Overview, Products, Market/Pricing, and Attack Plan. -->
+    <!-- Visualization & Content Choices:
+         1. Overview: KPI Cards (Goal: Inform) -> Rapid consumption of key company facts. HTML/CSS.
+         2. Market: Donut Chart (Goal: Organize/Inform) -> Visualizing their industry focus to identify overlap. Chart.js.
+         3. Attack Plan: Radar Chart (Goal: Compare) -> Visualizing strengths vs weaknesses against our theoretical platform. Chart.js.
+         4. Attack Plan: Accordions (Goal: Inform/Action) -> Step-by-step poaching strategies kept clean and interactive. Vanilla JS.
+         Library/Method: Chart.js for charts, Tailwind for layout.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; }
+
+        /* Required Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        @media (min-width: 768px) {
+            .chart-container { height: 400px; }
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-btn.active {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            border-right: 4px solid #0ea5e9;
+            font-weight: 600;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .accordion-btn.active + .accordion-content {
+            max-height: 500px; /* arbitrary max height for smooth transition */
+        }
+
+        /* Spinner for AI loading */
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 3px solid #fff;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
 </head>
-<body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="en"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Executive Battlecard: Antavo Enterprise Loyalty&lt;/title&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Chosen Palette: Executive Slate &amp; Teal (Backgrounds: bg-slate-50, Primary: bg-slate-800, Accents: text-teal-600, text-blue-600, clean white content areas) --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Application Structure Plan: A dashboard layout with a sticky sidebar for navigation and a main content area. This structure allows C-suite executives to quickly jump between high-level overviews, product specifics, pricing, and tactical competitive strategies without losing context. Information is chunked into logical tabs: Overview, Products, Market/Pricing, and Attack Plan. --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Visualization &amp; Content Choices:<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">         </span>1. Overview: KPI Cards (Goal: Inform) -&gt; Rapid consumption of key company facts. HTML/CSS.</p>
-<p class="p1"><span class="Apple-converted-space">         </span>2. Market: Donut Chart (Goal: Organize/Inform) -&gt; Visualizing their industry focus to identify overlap. Chart.js.</p>
-<p class="p1"><span class="Apple-converted-space">         </span>3. Attack Plan: Radar Chart (Goal: Compare) -&gt; Visualizing strengths vs weaknesses against our theoretical platform. Chart.js.</p>
-<p class="p1"><span class="Apple-converted-space">         </span>4. Attack Plan: Accordions (Goal: Inform/Action) -&gt; Step-by-step poaching strategies kept clean and interactive. Vanilla JS.<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">         </span>Library/Method: Chart.js for charts, Tailwind for layout.<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>--&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. --&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.jsdelivr.net/npm/chart.js"&gt;&lt;/script&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; }</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>/* Required Chart Container Styling */</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.chart-container {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>position: relative;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>max-width: 600px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-left: auto;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-right: auto;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>height: 350px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>max-height: 400px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: white;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 0.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>@media (min-width: 768px) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.chart-container { height: 400px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.tab-content { display: none; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>@keyframes fadeIn {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>from { opacity: 0; transform: translateY(5px); }</p>
-<p class="p1"><span class="Apple-converted-space">            </span>to { opacity: 1; transform: translateY(0); }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.nav-btn.active {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #f1f5f9;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #0f172a;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-right: 4px solid #0ea5e9;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.accordion-content {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>max-height: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>overflow: hidden;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>transition: max-height 0.3s ease-out;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.accordion-btn.active + .accordion-content {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>max-height: 500px; /* arbitrary max height for smooth transition */</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>/* Spinner for AI loading */</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.spinner {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 3px solid rgba(255,255,255,0.3);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 50%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-top: 3px solid #fff;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>height: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>animation: spin 1s linear infinite;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: inline-block;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>vertical-align: middle;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body class="text-slate-800 antialiased flex h-screen overflow-hidden"&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Sidebar Navigation --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;aside class="w-64 bg-slate-900 text-slate-300 flex flex-col h-full shrink-0 shadow-xl z-10"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="p-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;h1 class="text-2xl font-bold text-white tracking-tight"&gt;Intelligence&lt;span class="text-teal-400"&gt;Hub&lt;/span&gt;&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p class="text-xs text-slate-400 mt-1 uppercase tracking-wider"&gt;Target: Antavo&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;nav class="flex-1 mt-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="nav-btn active w-full text-left px-6 py-4 hover:bg-slate-800 transition-colors flex items-center gap-3" data-target="overview"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;span class="text-lg"&gt;&amp;#128202;&lt;/span&gt; Executive Summary</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="nav-btn w-full text-left px-6 py-4 hover:bg-slate-800 transition-colors flex items-center gap-3" data-target="product"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;span class="text-lg"&gt;&amp;#128187;&lt;/span&gt; Product Suite</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="nav-btn w-full text-left px-6 py-4 hover:bg-slate-800 transition-colors flex items-center gap-3" data-target="pricing"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;span class="text-lg"&gt;&amp;#128176;&lt;/span&gt; Market &amp; Pricing</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="nav-btn w-full text-left px-6 py-4 hover:bg-slate-800 transition-colors flex items-center gap-3 text-rose-300" data-target="attack"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;span class="text-lg"&gt;&amp;#9876;&lt;/span&gt; Competitive Attack Plan</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="nav-btn w-full text-left px-6 py-4 hover:bg-slate-800 transition-colors flex items-center gap-3 text-indigo-300 border-t border-slate-800 mt-2" data-target="ai-tools"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;span class="text-lg"&gt;✨&lt;/span&gt; AI Sales Tools</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/nav&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="p-6 border-t border-slate-800 text-xs text-slate-500"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>Confidential Internal Document&lt;br&gt;Not for public distribution.</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/aside&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Main Content Area --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;main class="flex-1 overflow-y-auto bg-slate-50 p-8"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- SECTION: Executive Summary --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;section id="overview" class="tab-content active max-w-6xl mx-auto"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;header class="mb-8 border-b border-slate-200 pb-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2 class="text-3xl font-bold text-slate-900"&gt;Antavo: Executive Summary&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="text-slate-600 mt-2 text-lg"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>This section provides a high-level overview of Antavo, identifying their core mission, market positioning, and primary value propositions. Use this to quickly understand who they are and why enterprise clients currently choose them.</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/header&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white p-6 rounded-lg shadow-sm border border-slate-100"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="text-slate-500 text-sm font-semibold uppercase"&gt;Category&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="text-xl font-bold text-slate-800 mt-1"&gt;Enterprise Loyalty Cloud&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white p-6 rounded-lg shadow-sm border border-slate-100"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="text-slate-500 text-sm font-semibold uppercase"&gt;Architecture&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="text-xl font-bold text-slate-800 mt-1"&gt;API-First (Headless)&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white p-6 rounded-lg shadow-sm border border-slate-100"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="text-slate-500 text-sm font-semibold uppercase"&gt;HQ Location&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="text-xl font-bold text-slate-800 mt-1"&gt;London, UK&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white p-6 rounded-lg shadow-sm border border-slate-100"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="text-slate-500 text-sm font-semibold uppercase"&gt;Target Market&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="text-xl font-bold text-slate-800 mt-1"&gt;Mid-Market to Enterprise&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="grid grid-cols-1 lg:grid-cols-2 gap-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white p-8 rounded-lg shadow-sm"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2"&gt;&lt;span class="text-teal-600"&gt;&amp;#128269;&lt;/span&gt; What They Do&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-slate-600 leading-relaxed mb-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>Antavo is an enterprise-grade loyalty cloud platform. They provide the underlying technology for large brands (retail, fashion, beauty, lifestyle) to build, manage, and scale complex, omnichannel customer loyalty and reward programs.</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-slate-600 leading-relaxed"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>Rather than just basic "points-for-purchase," Antavo specializes in experiential loyalty, gamification, and recognizing customer behaviors outside of pure transactions (e.g., recycling, writing reviews, active lifestyle).</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-slate-900 text-white p-8 rounded-lg shadow-sm relative overflow-hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="absolute -right-10 -top-10 text-9xl opacity-10"&gt;&amp;#11088;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-xl font-bold mb-4 flex items-center gap-2 text-teal-400"&gt;Biggest Value Proposition&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;ul class="space-y-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li class="flex items-start gap-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-teal-400 mt-1"&gt;&amp;#10003;&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;strong class="block text-lg"&gt;No-Code / Low-Code Workflows&lt;/strong&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;span class="text-slate-300 text-sm"&gt;Empowers marketing teams to change logic, campaigns, and rules without requiring IT or developer intervention.&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li class="flex items-start gap-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-teal-400 mt-1"&gt;&amp;#10003;&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;strong class="block text-lg"&gt;Headless Architecture&lt;/strong&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;span class="text-slate-300 text-sm"&gt;API-centric design allows massive enterprises to plug Antavo into any custom frontend (app, POS, website) seamlessly.&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li class="flex items-start gap-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-teal-400 mt-1"&gt;&amp;#10003;&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;strong class="block text-lg"&gt;Experiential Focus&lt;/strong&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;span class="text-slate-300 text-sm"&gt;Moving beyond discount-based loyalty to emotional loyalty through lifestyle engagement and gamification.&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/ul&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- SECTION: Product Suite --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;section id="product" class="tab-content max-w-6xl mx-auto"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;header class="mb-8 border-b border-slate-200 pb-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2 class="text-3xl font-bold text-slate-900"&gt;Product Suite &amp; Functionality&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="text-slate-600 mt-2 text-lg"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>This section breaks down Antavo's core modular offerings. Understanding their feature set allows our teams to identify functional gaps or areas where our product offers superior usability or efficiency.</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/header&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="grid grid-cols-1 md:grid-cols-2 gap-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Product Card --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white border-l-4 border-blue-500 p-6 rounded shadow-sm hover:shadow-md transition-shadow"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="text-2xl mb-3"&gt;&amp;#9881;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-xl font-bold text-slate-800 mb-2"&gt;Loyalty Management API&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-slate-600 mb-4"&gt;The core engine. A highly scalable set of REST APIs that connect POS systems, eCommerce platforms, and mobile apps to a central customer loyalty database.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex flex-wrap gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded"&gt;Headless&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded"&gt;Real-time sync&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Product Card --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white border-l-4 border-purple-500 p-6 rounded shadow-sm hover:shadow-md transition-shadow"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="text-2xl mb-3"&gt;&amp;#129521;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-xl font-bold text-slate-800 mb-2"&gt;No-Code Rule Engine&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-slate-600 mb-4"&gt;A visual, drag-and-drop workflow builder. Marketers use this to set up campaigns, define how points are earned, and trigger automated emails or push notifications based on user behavior.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex flex-wrap gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded"&gt;Marketing Autonomy&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded"&gt;Drag &amp; Drop&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Product Card --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white border-l-4 border-teal-500 p-6 rounded shadow-sm hover:shadow-md transition-shadow"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="text-2xl mb-3"&gt;&amp;#127919;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-xl font-bold text-slate-800 mb-2"&gt;Gamification &amp; Lifestyle&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-slate-600 mb-4"&gt;Modules designed to foster engagement without purchases. Includes treasure hunts, quizzes, referring friends, or connecting to fitness apps (Strava) to reward healthy lifestyles.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex flex-wrap gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded"&gt;Emotional Loyalty&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded"&gt;Non-transactional&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Product Card --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white border-l-4 border-orange-500 p-6 rounded shadow-sm hover:shadow-md transition-shadow"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="text-2xl mb-3"&gt;&amp;#128179;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-xl font-bold text-slate-800 mb-2"&gt;Mobile Wallet Integration&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-slate-600 mb-4"&gt;Native integrations to generate dynamic, digital loyalty cards for Apple Wallet and Google Pay, allowing for location-based push notifications when near a store.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex flex-wrap gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded"&gt;Apple Wallet&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded"&gt;Geolocation&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- SECTION: Pricing &amp; Market --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;section id="pricing" class="tab-content max-w-6xl mx-auto"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;header class="mb-8 border-b border-slate-200 pb-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2 class="text-3xl font-bold text-slate-900"&gt;Market Focus &amp; Pricing Intelligence&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="text-slate-600 mt-2 text-lg"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>This section details where Antavo wins deals and what they charge. Use the industry breakdown chart to target similar verticals, and leverage their pricing structure to position our solution as more cost-effective.</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/header&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Pricing Info --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white p-8 rounded-lg shadow-sm border border-slate-100"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2"&gt;&lt;span class="text-emerald-600"&gt;&amp;#128178;&lt;/span&gt; Estimated Pricing Model&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-slate-600 mb-6 bg-amber-50 p-4 border-l-4 border-amber-400 text-sm"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;em&gt;Note: Antavo does not publish public pricing. As an enterprise platform, pricing is highly customized based on volume. The following is compiled from market intelligence and competitive analysis.&lt;/em&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/p&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                    </span></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;ul class="space-y-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h4 class="font-bold text-slate-800 text-lg"&gt;1. Implementation Fee&lt;/h4&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-slate-600 mt-1"&gt;Usually significant. Often requires integration partners (System Integrators). Can range from &lt;strong&gt;$30,000 to $150,000+&lt;/strong&gt; depending on system complexity (POS, ERP, CDP integrations).&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h4 class="font-bold text-slate-800 text-lg"&gt;2. Annual SaaS License&lt;/h4&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-slate-600 mt-1"&gt;Billed annually. Tiered based on &lt;strong&gt;Active Loyalty Members&lt;/strong&gt; and/or &lt;strong&gt;Transaction Volume (API calls)&lt;/strong&gt;.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h4 class="font-bold text-slate-800 text-lg"&gt;3. Estimated Baseline&lt;/h4&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="mt-2 text-3xl font-black text-slate-900"&gt;$50,000 - $200,000+ &lt;span class="text-base font-normal text-slate-500"&gt;/ year&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-slate-500 text-sm mt-1"&gt;Typical range for Mid-Market to Enterprise clients.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/ul&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Market Chart --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white p-8 rounded-lg shadow-sm border border-slate-100 flex flex-col items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-xl font-bold text-slate-800 mb-2 w-full"&gt;Primary Target Industries&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-sm text-slate-500 mb-6 w-full"&gt;Where Antavo has the highest market penetration.&lt;/p&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                    </span></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="chart-container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;canvas id="industryChart"&gt;&lt;/canvas&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- SECTION: Attack Plan --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;section id="attack" class="tab-content max-w-6xl mx-auto"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;header class="mb-8 border-b border-rose-200 pb-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2 class="text-3xl font-bold text-slate-900"&gt;Competitive Attack Plan&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="text-slate-600 mt-2 text-lg"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>This section is your tactical playbook for poaching Antavo clients. The interactive radar chart compares our capabilities, and the accordions detail specific messaging strategies to incentivize clients to switch.</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/header&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="grid grid-cols-1 lg:grid-cols-12 gap-8"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Radar Chart --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="lg:col-span-5 bg-white p-6 rounded-lg shadow-sm border border-slate-100"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-center font-bold text-slate-800 mb-4"&gt;Capability Comparison&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="chart-container h-[300px]"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;canvas id="comparisonChart"&gt;&lt;/canvas&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="mt-4 text-sm text-slate-600 text-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>Our goal is to attack their weaknesses: Total Cost of Ownership (TCO), Time to Value, and Ease of Setup.</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Poaching Plays --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="lg:col-span-7 space-y-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2"&gt;&lt;span class="text-rose-500"&gt;&amp;#128640;&lt;/span&gt; Client Poaching Strategies&lt;/h3&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                    </span></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- Accordion Item 1 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white border border-slate-200 rounded-lg overflow-hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button class="accordion-btn w-full text-left px-6 py-4 font-bold text-slate-800 hover:bg-slate-50 flex justify-between items-center transition-colors"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span&gt;Play 1: Attack the "Integration Tax" (TCO)&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-slate-400 transition-transform transform duration-300"&gt;&amp;#9660;&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="accordion-content bg-slate-50 border-t border-slate-100"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="p-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;p class="mb-3"&gt;&lt;strong&gt;The Pain Point:&lt;/strong&gt; Antavo's API-first headless nature is great, but it requires heavy developer resources or expensive SI (System Integrator) partners to build the front-end and maintain connections.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;p class="mb-3"&gt;&lt;strong&gt;Our Incentive/Offer:&lt;/strong&gt;&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;ul class="list-disc pl-5 space-y-2 text-slate-700"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;li&gt;Offer "Out-of-the-box" native integrations that require zero dev work (e.g., 1-click Shopify/Salesforce Commerce Cloud integration).&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;li&gt;Waive implementation fees if they sign a 2-year contract.&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;li&gt;&lt;strong&gt;Messaging:&lt;/strong&gt; "Stop paying agencies to manage your loyalty program. Switch to us and redirect your IT budget to actual marketing."&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/ul&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- Accordion Item 2 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white border border-slate-200 rounded-lg overflow-hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button class="accordion-btn w-full text-left px-6 py-4 font-bold text-slate-800 hover:bg-slate-50 flex justify-between items-center transition-colors"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span&gt;Play 2: The "Time-to-Value" Sprint&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-slate-400 transition-transform transform duration-300"&gt;&amp;#9660;&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="accordion-content bg-slate-50 border-t border-slate-100"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="p-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;p class="mb-3"&gt;&lt;strong&gt;The Pain Point:&lt;/strong&gt; Enterprise solutions take 6-12 months to deploy. Marketers get impatient.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;p class="mb-3"&gt;&lt;strong&gt;Our Incentive/Offer:&lt;/strong&gt;&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;ul class="list-disc pl-5 space-y-2 text-slate-700"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;li&gt;Offer a "Fast-Track Migration" guarantee: Live in 60 days or the first 3 months are free.&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;li&gt;Provide a dedicated, free data migration team to pull their historical member data from Antavo securely via API.&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;li&gt;&lt;strong&gt;Messaging:&lt;/strong&gt; "Don't wait a year for an update. We will migrate your millions of members seamlessly, with zero downtime for your customers."&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/ul&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- Accordion Item 3 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white border border-slate-200 rounded-lg overflow-hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button class="accordion-btn w-full text-left px-6 py-4 font-bold text-slate-800 hover:bg-slate-50 flex justify-between items-center transition-colors"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span&gt;Play 3: Predictable Pricing vs Overages&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-slate-400 transition-transform transform duration-300"&gt;&amp;#9660;&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="accordion-content bg-slate-50 border-t border-slate-100"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="p-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;p class="mb-3"&gt;&lt;strong&gt;The Pain Point:&lt;/strong&gt; Pricing based on API calls can balloon unexpectedly during peak holiday seasons (Black Friday).&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;p class="mb-3"&gt;&lt;strong&gt;Our Incentive/Offer:&lt;/strong&gt;&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;ul class="list-disc pl-5 space-y-2 text-slate-700"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;li&gt;Offer a flat-rate tier based on active members, completely removing API transaction limits.&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;li&gt;Offer an "ROI Guarantee" — if they don't see a 15% lift in repeat purchase rate within 12 months, give them a heavy discount on renewal.&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;li&gt;&lt;strong&gt;Messaging:&lt;/strong&gt; "Punished for your own success? Our flat-rate model means you never pay extra just because you had a successful marketing campaign."&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/ul&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- SECTION: AI Sales Tools --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;section id="ai-tools" class="tab-content max-w-6xl mx-auto"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;header class="mb-8 border-b border-indigo-200 pb-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2 class="text-3xl font-bold text-slate-900"&gt;✨ AI Sales Assistant&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="text-slate-600 mt-2 text-lg"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>Leverage the Gemini API to generate customized outreach and handle live objections based on Antavo's competitive profile.</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/header&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="grid grid-cols-1 lg:grid-cols-2 gap-8"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Tool 1: Email Generator --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white p-6 rounded-lg shadow-sm border border-indigo-100 flex flex-col"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="text-indigo-600"&gt;✉️&lt;/span&gt; Cold Outreach Drafter</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="space-y-4 mb-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;label class="block text-sm font-medium text-slate-700 mb-1"&gt;Target Industry&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;select id="email-industry" class="w-full border border-slate-300 rounded p-2 focus:ring-indigo-500 focus:border-indigo-500"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;option&gt;Retail / Fashion&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;option&gt;Beauty &amp; Cosmetics&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;option&gt;Hospitality&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;option&gt;FMCG / Grocery&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/select&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;label class="block text-sm font-medium text-slate-700 mb-1"&gt;Pain Point to Attack&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;input type="text" id="email-pain" class="w-full border border-slate-300 rounded p-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., High integration costs, slow time to market..."&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;label class="block text-sm font-medium text-slate-700 mb-1"&gt;Tone&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;select id="email-tone" class="w-full border border-slate-300 rounded p-2 focus:ring-indigo-500 focus:border-indigo-500"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;option&gt;Direct &amp; Aggressive&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;option&gt;Consultative &amp; Helpful&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;option&gt;Short &amp; Punchy&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/select&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button id="btn-generate-email" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition-colors flex justify-center items-center gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span&gt;✨ Generate Email&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div id="email-output-container" class="mt-4 hidden flex-1 flex flex-col"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;label class="block text-sm font-medium text-slate-700 mb-1"&gt;Drafted Email:&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;textarea id="email-output" class="w-full flex-1 border border-indigo-200 bg-indigo-50 rounded p-3 text-sm text-slate-800 min-h-[200px]" readonly&gt;&lt;/textarea&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div id="email-error" class="mt-2 text-rose-500 text-sm hidden"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Tool 2: Objection Handler --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white p-6 rounded-lg shadow-sm border border-purple-100 flex flex-col"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="text-purple-600"&gt;🛡️&lt;/span&gt; Live Objection Handler</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="space-y-4 mb-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;label class="block text-sm font-medium text-slate-700 mb-1"&gt;What did the prospect say?&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;textarea id="objection-input" class="w-full border border-slate-300 rounded p-3 focus:ring-purple-500 focus:border-purple-500 min-h-[100px]" placeholder="e.g., 'We really like Antavo's no-code rule engine, it saves our marketing team a lot of time.'"&gt;&lt;/textarea&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button id="btn-handle-objection" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition-colors flex justify-center items-center gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span&gt;✨ Formulate Counter-Argument&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div id="objection-output-container" class="mt-4 hidden flex-1 flex flex-col"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;label class="block text-sm font-medium text-slate-700 mb-1"&gt;Suggested Talk Track:&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div id="objection-output" class="w-full flex-1 border border-purple-200 bg-purple-50 rounded p-4 text-sm text-slate-800 overflow-y-auto min-h-[200px] prose prose-sm"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div id="objection-error" class="mt-2 text-rose-500 text-sm hidden"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/main&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Interactive Logic &amp; Chart Generation --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>// --- Gemini API Configuration ---</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const apiKey = "";</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>async function fetchWithRetry(url, options, retries = 5) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const delays = [1000, 2000, 4000, 8000, 16000];</p>
-<p class="p1"><span class="Apple-converted-space">            </span>for (let i = 0; i &lt; retries; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>try {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>const response = await fetch(url, options);</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>return await response.json();</p>
-<p class="p1"><span class="Apple-converted-space">                </span>} catch (error) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>if (i === retries - 1) throw error;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>await new Promise(res =&gt; setTimeout(res, delays[i]));</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>async function callGeminiAPI(prompt, systemInstruction) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const payload = {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>contents: [{ parts: [{ text: prompt }] }],</p>
-<p class="p1"><span class="Apple-converted-space">                </span>systemInstruction: { parts: [{ text: systemInstruction }] }</p>
-<p class="p1"><span class="Apple-converted-space">            </span>};</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const result = await fetchWithRetry(url, {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>method: 'POST',</p>
-<p class="p1"><span class="Apple-converted-space">                </span>headers: { 'Content-Type': 'application/json' },</p>
-<p class="p1"><span class="Apple-converted-space">                </span>body: JSON.stringify(payload)</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>return result.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// --- Markdown to Simple HTML Parser for Objection output ---</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function parseMarkdown(md) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>let html = md.replace(/\*\*(.*?)\*\*/g, '&lt;strong&gt;$1&lt;/strong&gt;');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>html = html.replace(/\*(.*?)\*/g, '&lt;em&gt;$1&lt;/em&gt;');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>html = html.replace(/\n\n/g, '&lt;/p&gt;&lt;p class="mb-2"&gt;');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>html = html.replace(/\n/g, '&lt;br&gt;');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>html = html.replace(/^- (.*)/gm, '&lt;li class="ml-4 list-disc"&gt;$1&lt;/li&gt;');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>return `&lt;p class="mb-2"&gt;${html}&lt;/p&gt;`;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.addEventListener('DOMContentLoaded', () =&gt; {</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// --- Navigation Logic ---</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const navBtns = document.querySelectorAll('.nav-btn');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const tabContents = document.querySelectorAll('.tab-content');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>navBtns.forEach(btn =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>btn.addEventListener('click', () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>// Remove active from all buttons and tabs</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>navBtns.forEach(b =&gt; b.classList.remove('active'));</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>tabContents.forEach(t =&gt; t.classList.remove('active'));</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>// Add active to clicked button and corresponding tab</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>btn.classList.add('active');</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>const targetId = btn.getAttribute('data-target');</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>document.getElementById(targetId).classList.add('active');</p>
-<p class="p1"><span class="Apple-converted-space">                </span>});</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// --- Accordion Logic ---</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const accordions = document.querySelectorAll('.accordion-btn');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>accordions.forEach(acc =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>acc.addEventListener('click', function() {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>// Toggle current</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>this.classList.toggle('active');</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>const arrow = this.querySelector('span:last-child');</p>
-<p class="p2"><span class="Apple-converted-space">                    </span></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>if (this.classList.contains('active')) {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>arrow.style.transform = 'rotate(180deg)';</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>arrow.style.transform = 'rotate(0deg)';</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>});</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// --- Chart.js Initializations ---</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// 1. Industry Donut Chart</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const ctxIndustry = document.getElementById('industryChart').getContext('2d');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>new Chart(ctxIndustry, {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>type: 'doughnut',</p>
-<p class="p1"><span class="Apple-converted-space">                </span>data: {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>labels: ['Fashion/Apparel', 'Retail/FMCG', 'Beauty &amp; Cosmetics', 'Hospitality', 'Other'],</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>datasets: [{</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>data: [35, 30, 20, 10, 5],</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>backgroundColor: [</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>'#0f172a', // slate-900</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>'#334155', // slate-700</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>'#0ea5e9', // sky-500</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>'#14b8a6', // teal-500</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>'#cbd5e1'<span class="Apple-converted-space">  </span>// slate-300</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>],</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>borderWidth: 0,</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>hoverOffset: 4</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>}]</p>
-<p class="p1"><span class="Apple-converted-space">                </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                </span>options: {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>responsive: true,</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>maintainAspectRatio: false,</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>plugins: {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>legend: { position: 'bottom' },</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>tooltip: {</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>callbacks: {</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>label: function(context) {</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>return ' ' + context.label + ': ' + context.parsed + '%';</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>cutout: '65%'</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// 2. Comparison Radar Chart</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const ctxRadar = document.getElementById('comparisonChart').getContext('2d');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>new Chart(ctxRadar, {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>type: 'radar',</p>
-<p class="p1"><span class="Apple-converted-space">                </span>data: {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>labels: ['API Flexibility', 'Omnichannel', 'Ease of Setup', 'Total Cost', 'Time to Value'],</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>datasets: [</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>{</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>label: 'Antavo',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>data: [9, 9, 4, 3, 4], // High flexibility, low ease/cost/speed</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>fill: true,</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>backgroundColor: 'rgba(15, 23, 42, 0.2)',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>borderColor: '#0f172a',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>pointBackgroundColor: '#0f172a',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>pointBorderColor: '#fff',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>pointHoverBackgroundColor: '#fff',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>pointHoverBorderColor: '#0f172a'</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>{</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>label: 'Our Proposed Solution',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>data: [7, 7, 9, 8, 9], // Good flexibility, high ease/cost/speed</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>fill: true,</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>backgroundColor: 'rgba(20, 184, 166, 0.2)',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>borderColor: '#14b8a6',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>pointBackgroundColor: '#14b8a6',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>pointBorderColor: '#fff',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>pointHoverBackgroundColor: '#fff',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>pointHoverBorderColor: '#14b8a6'</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>]</p>
-<p class="p1"><span class="Apple-converted-space">                </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                </span>options: {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>responsive: true,</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>maintainAspectRatio: false,</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>scales: {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>r: {</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>angleLines: { color: 'rgba(0,0,0,0.1)' },</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>grid: { color: 'rgba(0,0,0,0.1)' },</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>pointLabels: {</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>font: { size: 11, family: "'Segoe UI', sans-serif" },</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>color: '#475569'</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>ticks: { display: false, min: 0, max: 10 }</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>plugins: {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>legend: { position: 'bottom' }</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// --- AI Tool Logic ---</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// 1. Email Generator</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const btnGenerateEmail = document.getElementById('btn-generate-email');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const emailOutputContainer = document.getElementById('email-output-container');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const emailOutput = document.getElementById('email-output');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const emailError = document.getElementById('email-error');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>btnGenerateEmail.addEventListener('click', async () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const industry = document.getElementById('email-industry').value;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const painPoint = document.getElementById('email-pain').value || "high total cost of ownership and slow implementation";</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const tone = document.getElementById('email-tone').value;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>// UI Loading state</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const originalText = btnGenerateEmail.innerHTML;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>btnGenerateEmail.innerHTML = '&lt;span class="spinner"&gt;&lt;/span&gt; Generating...';</p>
-<p class="p1"><span class="Apple-converted-space">                </span>btnGenerateEmail.disabled = true;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>emailError.classList.add('hidden');</p>
-<p class="p1"><span class="Apple-converted-space">                </span>emailOutputContainer.classList.add('hidden');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>const systemPrompt = "You are an elite enterprise software account executive. Your goal is to write cold outreach emails that convince companies using 'Antavo' (a loyalty cloud software) to take a meeting with you to discuss switching to your superior platform.";</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const userPrompt = `Draft a cold email to a VP of Loyalty at a company in the ${industry} industry.<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>They are currently using Antavo.<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>Focus the core of the message on attacking this specific pain point they might be feeling with Antavo: ${painPoint}.<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>Make the tone of the email: ${tone}.<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>Include a clear, low-friction call to action. Do not include subject lines, just the body. Keep it concise.`;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>try {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>const responseText = await callGeminiAPI(userPrompt, systemPrompt);</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>emailOutput.value = responseText.trim();</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>emailOutputContainer.classList.remove('hidden');</p>
-<p class="p1"><span class="Apple-converted-space">                </span>} catch (error) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>console.error("Gemini API Error:", error);</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>emailError.textContent = "Failed to generate email. Please try again later.";</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>emailError.classList.remove('hidden');</p>
-<p class="p1"><span class="Apple-converted-space">                </span>} finally {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>btnGenerateEmail.innerHTML = originalText;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>btnGenerateEmail.disabled = false;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// 2. Objection Handler</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const btnHandleObjection = document.getElementById('btn-handle-objection');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const objectionOutputContainer = document.getElementById('objection-output-container');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const objectionOutput = document.getElementById('objection-output');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const objectionError = document.getElementById('objection-error');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>btnHandleObjection.addEventListener('click', async () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const objection = document.getElementById('objection-input').value;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>if (!objection.trim()) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>objectionError.textContent = "Please enter an objection first.";</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>objectionError.classList.remove('hidden');</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>// UI Loading state</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const originalText = btnHandleObjection.innerHTML;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>btnHandleObjection.innerHTML = '&lt;span class="spinner"&gt;&lt;/span&gt; Formulating...';</p>
-<p class="p1"><span class="Apple-converted-space">                </span>btnHandleObjection.disabled = true;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>objectionError.classList.add('hidden');</p>
-<p class="p1"><span class="Apple-converted-space">                </span>objectionOutputContainer.classList.add('hidden');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>const systemPrompt = "You are a tactical sales strategist. Your company competes against 'Antavo', an enterprise loyalty platform known for being headless, API-first, but having high implementation costs and slow time-to-value.";</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const userPrompt = `A prospect currently using or evaluating Antavo just gave me this objection:<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>"${objection}"</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>Provide a concise, powerful 3-point counter-argument I can use right now to overcome this objection. Format it clearly with bolding for emphasis.`;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>try {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>const responseText = await callGeminiAPI(userPrompt, systemPrompt);</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>objectionOutput.innerHTML = parseMarkdown(responseText);</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>objectionOutputContainer.classList.remove('hidden');</p>
-<p class="p1"><span class="Apple-converted-space">                </span>} catch (error) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>console.error("Gemini API Error:", error);</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>objectionError.textContent = "Failed to formulate response. Please try again later.";</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>objectionError.classList.remove('hidden');</p>
-<p class="p1"><span class="Apple-converted-space">                </span>} finally {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>btnHandleObjection.innerHTML = originalText;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>btnHandleObjection.disabled = false;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>});</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+<body class="text-slate-800 antialiased flex h-screen overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col h-full shrink-0 shadow-xl z-10">
+        <div class="p-6">
+            <h1 class="text-2xl font-bold text-white tracking-tight">Intelligence<span class="text-teal-400">Hub</span></h1>
+            <p class="text-xs text-slate-400 mt-1 uppercase tracking-wider">Target: Antavo</p>
+        </div>
+        <nav class="flex-1 mt-6">
+            <button class="nav-btn active w-full text-left px-6 py-4 hover:bg-slate-800 transition-colors flex items-center gap-3" data-target="overview">
+                <span class="text-lg">📊</span> Executive Summary
+            </button>
+            <button class="nav-btn w-full text-left px-6 py-4 hover:bg-slate-800 transition-colors flex items-center gap-3" data-target="product">
+                <span class="text-lg">💻</span> Product Suite
+            </button>
+            <button class="nav-btn w-full text-left px-6 py-4 hover:bg-slate-800 transition-colors flex items-center gap-3" data-target="pricing">
+                <span class="text-lg">💰</span> Market & Pricing
+            </button>
+            <button class="nav-btn w-full text-left px-6 py-4 hover:bg-slate-800 transition-colors flex items-center gap-3 text-rose-300" data-target="attack">
+                <span class="text-lg">⚔</span> Competitive Attack Plan
+            </button>
+            <button class="nav-btn w-full text-left px-6 py-4 hover:bg-slate-800 transition-colors flex items-center gap-3 text-indigo-300 border-t border-slate-800 mt-2" data-target="ai-tools">
+                <span class="text-lg">✨</span> AI Sales Tools
+            </button>
+        </nav>
+        <div class="p-6 border-t border-slate-800 text-xs text-slate-500">
+            Confidential Internal Document<br>Not for public distribution.
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto bg-slate-50 p-8">
+
+        <!-- SECTION: Executive Summary -->
+        <section id="overview" class="tab-content active max-w-6xl mx-auto">
+            <header class="mb-8 border-b border-slate-200 pb-4">
+                <h2 class="text-3xl font-bold text-slate-900">Antavo: Executive Summary</h2>
+                <p class="text-slate-600 mt-2 text-lg">
+                    This section provides a high-level overview of Antavo, identifying their core mission, market positioning, and primary value propositions. Use this to quickly understand who they are and why enterprise clients currently choose them.
+                </p>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-100">
+                    <div class="text-slate-500 text-sm font-semibold uppercase">Category</div>
+                    <div class="text-xl font-bold text-slate-800 mt-1">Enterprise Loyalty Cloud</div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-100">
+                    <div class="text-slate-500 text-sm font-semibold uppercase">Architecture</div>
+                    <div class="text-xl font-bold text-slate-800 mt-1">API-First (Headless)</div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-100">
+                    <div class="text-slate-500 text-sm font-semibold uppercase">HQ Location</div>
+                    <div class="text-xl font-bold text-slate-800 mt-1">London, UK</div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-100">
+                    <div class="text-slate-500 text-sm font-semibold uppercase">Target Market</div>
+                    <div class="text-xl font-bold text-slate-800 mt-1">Mid-Market to Enterprise</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-8 rounded-lg shadow-sm">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2"><span class="text-teal-600">🔍</span> What They Do</h3>
+                    <p class="text-slate-600 leading-relaxed mb-4">
+                        Antavo is an enterprise-grade loyalty cloud platform. They provide the underlying technology for large brands (retail, fashion, beauty, lifestyle) to build, manage, and scale complex, omnichannel customer loyalty and reward programs.
+                    </p>
+                    <p class="text-slate-600 leading-relaxed">
+                        Rather than just basic "points-for-purchase," Antavo specializes in experiential loyalty, gamification, and recognizing customer behaviors outside of pure transactions (e.g., recycling, writing reviews, active lifestyle).
+                    </p>
+                </div>
+
+                <div class="bg-slate-900 text-white p-8 rounded-lg shadow-sm relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 text-9xl opacity-10">⭐</div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center gap-2 text-teal-400">Biggest Value Proposition</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <span class="text-teal-400 mt-1">✓</span>
+                            <div>
+                                <strong class="block text-lg">No-Code / Low-Code Workflows</strong>
+                                <span class="text-slate-300 text-sm">Empowers marketing teams to change logic, campaigns, and rules without requiring IT or developer intervention.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-teal-400 mt-1">✓</span>
+                            <div>
+                                <strong class="block text-lg">Headless Architecture</strong>
+                                <span class="text-slate-300 text-sm">API-centric design allows massive enterprises to plug Antavo into any custom frontend (app, POS, website) seamlessly.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-teal-400 mt-1">✓</span>
+                            <div>
+                                <strong class="block text-lg">Experiential Focus</strong>
+                                <span class="text-slate-300 text-sm">Moving beyond discount-based loyalty to emotional loyalty through lifestyle engagement and gamification.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: Product Suite -->
+        <section id="product" class="tab-content max-w-6xl mx-auto">
+            <header class="mb-8 border-b border-slate-200 pb-4">
+                <h2 class="text-3xl font-bold text-slate-900">Product Suite & Functionality</h2>
+                <p class="text-slate-600 mt-2 text-lg">
+                    This section breaks down Antavo's core modular offerings. Understanding their feature set allows our teams to identify functional gaps or areas where our product offers superior usability or efficiency.
+                </p>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Product Card -->
+                <div class="bg-white border-l-4 border-blue-500 p-6 rounded shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-2xl mb-3">⚙</div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Loyalty Management API</h3>
+                    <p class="text-slate-600 mb-4">The core engine. A highly scalable set of REST APIs that connect POS systems, eCommerce platforms, and mobile apps to a central customer loyalty database.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded">Headless</span>
+                        <span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded">Real-time sync</span>
+                    </div>
+                </div>
+
+                <!-- Product Card -->
+                <div class="bg-white border-l-4 border-purple-500 p-6 rounded shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-2xl mb-3">🧱</div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">No-Code Rule Engine</h3>
+                    <p class="text-slate-600 mb-4">A visual, drag-and-drop workflow builder. Marketers use this to set up campaigns, define how points are earned, and trigger automated emails or push notifications based on user behavior.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded">Marketing Autonomy</span>
+                        <span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded">Drag & Drop</span>
+                    </div>
+                </div>
+
+                <!-- Product Card -->
+                <div class="bg-white border-l-4 border-teal-500 p-6 rounded shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-2xl mb-3">🎯</div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Gamification & Lifestyle</h3>
+                    <p class="text-slate-600 mb-4">Modules designed to foster engagement without purchases. Includes treasure hunts, quizzes, referring friends, or connecting to fitness apps (Strava) to reward healthy lifestyles.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded">Emotional Loyalty</span>
+                        <span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded">Non-transactional</span>
+                    </div>
+                </div>
+
+                <!-- Product Card -->
+                <div class="bg-white border-l-4 border-orange-500 p-6 rounded shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-2xl mb-3">💳</div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Mobile Wallet Integration</h3>
+                    <p class="text-slate-600 mb-4">Native integrations to generate dynamic, digital loyalty cards for Apple Wallet and Google Pay, allowing for location-based push notifications when near a store.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded">Apple Wallet</span>
+                        <span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded">Geolocation</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: Pricing & Market -->
+        <section id="pricing" class="tab-content max-w-6xl mx-auto">
+            <header class="mb-8 border-b border-slate-200 pb-4">
+                <h2 class="text-3xl font-bold text-slate-900">Market Focus & Pricing Intelligence</h2>
+                <p class="text-slate-600 mt-2 text-lg">
+                    This section details where Antavo wins deals and what they charge. Use the industry breakdown chart to target similar verticals, and leverage their pricing structure to position our solution as more cost-effective.
+                </p>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+
+                <!-- Pricing Info -->
+                <div class="bg-white p-8 rounded-lg shadow-sm border border-slate-100">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2"><span class="text-emerald-600">💲</span> Estimated Pricing Model</h3>
+                    <p class="text-slate-600 mb-6 bg-amber-50 p-4 border-l-4 border-amber-400 text-sm">
+                        <em>Note: Antavo does not publish public pricing. As an enterprise platform, pricing is highly customized based on volume. The following is compiled from market intelligence and competitive analysis.</em>
+                    </p>
+
+                    <ul class="space-y-6">
+                        <li>
+                            <h4 class="font-bold text-slate-800 text-lg">1. Implementation Fee</h4>
+                            <p class="text-slate-600 mt-1">Usually significant. Often requires integration partners (System Integrators). Can range from <strong>$30,000 to $150,000+</strong> depending on system complexity (POS, ERP, CDP integrations).</p>
+                        </li>
+                        <li>
+                            <h4 class="font-bold text-slate-800 text-lg">2. Annual SaaS License</h4>
+                            <p class="text-slate-600 mt-1">Billed annually. Tiered based on <strong>Active Loyalty Members</strong> and/or <strong>Transaction Volume (API calls)</strong>.</p>
+                        </li>
+                        <li>
+                            <h4 class="font-bold text-slate-800 text-lg">3. Estimated Baseline</h4>
+                            <div class="mt-2 text-3xl font-black text-slate-900">$50,000 - $200,000+ <span class="text-base font-normal text-slate-500">/ year</span></div>
+                            <p class="text-slate-500 text-sm mt-1">Typical range for Mid-Market to Enterprise clients.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Market Chart -->
+                <div class="bg-white p-8 rounded-lg shadow-sm border border-slate-100 flex flex-col items-center">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 w-full">Primary Target Industries</h3>
+                    <p class="text-sm text-slate-500 mb-6 w-full">Where Antavo has the highest market penetration.</p>
+
+                    <div class="chart-container">
+                        <canvas id="industryChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION: Attack Plan -->
+        <section id="attack" class="tab-content max-w-6xl mx-auto">
+            <header class="mb-8 border-b border-rose-200 pb-4">
+                <h2 class="text-3xl font-bold text-slate-900">Competitive Attack Plan</h2>
+                <p class="text-slate-600 mt-2 text-lg">
+                    This section is your tactical playbook for poaching Antavo clients. The interactive radar chart compares our capabilities, and the accordions detail specific messaging strategies to incentivize clients to switch.
+                </p>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+                <!-- Radar Chart -->
+                <div class="lg:col-span-5 bg-white p-6 rounded-lg shadow-sm border border-slate-100">
+                    <h3 class="text-center font-bold text-slate-800 mb-4">Capability Comparison</h3>
+                    <div class="chart-container h-[300px]">
+                        <canvas id="comparisonChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-sm text-slate-600 text-center">
+                        Our goal is to attack their weaknesses: Total Cost of Ownership (TCO), Time to Value, and Ease of Setup.
+                    </div>
+                </div>
+
+                <!-- Poaching Plays -->
+                <div class="lg:col-span-7 space-y-4">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2"><span class="text-rose-500">🚀</span> Client Poaching Strategies</h3>
+
+                    <!-- Accordion Item 1 -->
+                    <div class="bg-white border border-slate-200 rounded-lg overflow-hidden">
+                        <button class="accordion-btn w-full text-left px-6 py-4 font-bold text-slate-800 hover:bg-slate-50 flex justify-between items-center transition-colors">
+                            <span>Play 1: Attack the "Integration Tax" (TCO)</span>
+                            <span class="text-slate-400 transition-transform transform duration-300">▼</span>
+                        </button>
+                        <div class="accordion-content bg-slate-50 border-t border-slate-100">
+                            <div class="p-6">
+                                <p class="mb-3"><strong>The Pain Point:</strong> Antavo's API-first headless nature is great, but it requires heavy developer resources or expensive SI (System Integrator) partners to build the front-end and maintain connections.</p>
+                                <p class="mb-3"><strong>Our Incentive/Offer:</strong></p>
+                                <ul class="list-disc pl-5 space-y-2 text-slate-700">
+                                    <li>Offer "Out-of-the-box" native integrations that require zero dev work (e.g., 1-click Shopify/Salesforce Commerce Cloud integration).</li>
+                                    <li>Waive implementation fees if they sign a 2-year contract.</li>
+                                    <li><strong>Messaging:</strong> "Stop paying agencies to manage your loyalty program. Switch to us and redirect your IT budget to actual marketing."</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accordion Item 2 -->
+                    <div class="bg-white border border-slate-200 rounded-lg overflow-hidden">
+                        <button class="accordion-btn w-full text-left px-6 py-4 font-bold text-slate-800 hover:bg-slate-50 flex justify-between items-center transition-colors">
+                            <span>Play 2: The "Time-to-Value" Sprint</span>
+                            <span class="text-slate-400 transition-transform transform duration-300">▼</span>
+                        </button>
+                        <div class="accordion-content bg-slate-50 border-t border-slate-100">
+                            <div class="p-6">
+                                <p class="mb-3"><strong>The Pain Point:</strong> Enterprise solutions take 6-12 months to deploy. Marketers get impatient.</p>
+                                <p class="mb-3"><strong>Our Incentive/Offer:</strong></p>
+                                <ul class="list-disc pl-5 space-y-2 text-slate-700">
+                                    <li>Offer a "Fast-Track Migration" guarantee: Live in 60 days or the first 3 months are free.</li>
+                                    <li>Provide a dedicated, free data migration team to pull their historical member data from Antavo securely via API.</li>
+                                    <li><strong>Messaging:</strong> "Don't wait a year for an update. We will migrate your millions of members seamlessly, with zero downtime for your customers."</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accordion Item 3 -->
+                    <div class="bg-white border border-slate-200 rounded-lg overflow-hidden">
+                        <button class="accordion-btn w-full text-left px-6 py-4 font-bold text-slate-800 hover:bg-slate-50 flex justify-between items-center transition-colors">
+                            <span>Play 3: Predictable Pricing vs Overages</span>
+                            <span class="text-slate-400 transition-transform transform duration-300">▼</span>
+                        </button>
+                        <div class="accordion-content bg-slate-50 border-t border-slate-100">
+                            <div class="p-6">
+                                <p class="mb-3"><strong>The Pain Point:</strong> Pricing based on API calls can balloon unexpectedly during peak holiday seasons (Black Friday).</p>
+                                <p class="mb-3"><strong>Our Incentive/Offer:</strong></p>
+                                <ul class="list-disc pl-5 space-y-2 text-slate-700">
+                                    <li>Offer a flat-rate tier based on active members, completely removing API transaction limits.</li>
+                                    <li>Offer an "ROI Guarantee" — if they don't see a 15% lift in repeat purchase rate within 12 months, give them a heavy discount on renewal.</li>
+                                    <li><strong>Messaging:</strong> "Punished for your own success? Our flat-rate model means you never pay extra just because you had a successful marketing campaign."</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: AI Sales Tools -->
+        <section id="ai-tools" class="tab-content max-w-6xl mx-auto">
+            <header class="mb-8 border-b border-indigo-200 pb-4">
+                <h2 class="text-3xl font-bold text-slate-900">✨ AI Sales Assistant</h2>
+                <p class="text-slate-600 mt-2 text-lg">
+                    Leverage the Gemini API to generate customized outreach and handle live objections based on Antavo's competitive profile.
+                </p>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+                <!-- Tool 1: Email Generator -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-indigo-100 flex flex-col">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="text-indigo-600">✉️</span> Cold Outreach Drafter
+                    </h3>
+                    <div class="space-y-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Target Industry</label>
+                            <select id="email-industry" class="w-full border border-slate-300 rounded p-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <option>Retail / Fashion</option>
+                                <option>Beauty & Cosmetics</option>
+                                <option>Hospitality</option>
+                                <option>FMCG / Grocery</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Pain Point to Attack</label>
+                            <input type="text" id="email-pain" class="w-full border border-slate-300 rounded p-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., High integration costs, slow time to market...">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Tone</label>
+                            <select id="email-tone" class="w-full border border-slate-300 rounded p-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <option>Direct & Aggressive</option>
+                                <option>Consultative & Helpful</option>
+                                <option>Short & Punchy</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button id="btn-generate-email" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition-colors flex justify-center items-center gap-2">
+                        <span>✨ Generate Email</span>
+                    </button>
+                    <div id="email-output-container" class="mt-4 hidden flex-1 flex flex-col">
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Drafted Email:</label>
+                        <textarea id="email-output" class="w-full flex-1 border border-indigo-200 bg-indigo-50 rounded p-3 text-sm text-slate-800 min-h-[200px]" readonly></textarea>
+                    </div>
+                    <div id="email-error" class="mt-2 text-rose-500 text-sm hidden"></div>
+                </div>
+
+                <!-- Tool 2: Objection Handler -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-purple-100 flex flex-col">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="text-purple-600">🛡️</span> Live Objection Handler
+                    </h3>
+                    <div class="space-y-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">What did the prospect say?</label>
+                            <textarea id="objection-input" class="w-full border border-slate-300 rounded p-3 focus:ring-purple-500 focus:border-purple-500 min-h-[100px]" placeholder="e.g., 'We really like Antavo's no-code rule engine, it saves our marketing team a lot of time.'"></textarea>
+                        </div>
+                    </div>
+                    <button id="btn-handle-objection" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition-colors flex justify-center items-center gap-2">
+                        <span>✨ Formulate Counter-Argument</span>
+                    </button>
+                    <div id="objection-output-container" class="mt-4 hidden flex-1 flex flex-col">
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Suggested Talk Track:</label>
+                        <div id="objection-output" class="w-full flex-1 border border-purple-200 bg-purple-50 rounded p-4 text-sm text-slate-800 overflow-y-auto min-h-[200px] prose prose-sm"></div>
+                    </div>
+                    <div id="objection-error" class="mt-2 text-rose-500 text-sm hidden"></div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Interactive Logic & Chart Generation -->
+    <script>
+        // --- Gemini API Configuration ---
+        const apiKey = "";
+
+        async function fetchWithRetry(url, options, retries = 5) {
+            const delays = [1000, 2000, 4000, 8000, 16000];
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return await response.json();
+                } catch (error) {
+                    if (i === retries - 1) throw error;
+                    await new Promise(res => setTimeout(res, delays[i]));
+                }
+            }
+        }
+
+        async function callGeminiAPI(prompt, systemInstruction) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                systemInstruction: { parts: [{ text: systemInstruction }] }
+            };
+
+            const result = await fetchWithRetry(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            return result.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
+        }
+
+        // --- Markdown to Simple HTML Parser for Objection output ---
+        function parseMarkdown(md) {
+            let html = md.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            html = html.replace(/\n\n/g, '</p><p class="mb-2">');
+            html = html.replace(/\n/g, '<br>');
+            html = html.replace(/^- (.*)/gm, '<li class="ml-4 list-disc">$1</li>');
+            return `<p class="mb-2">${html}</p>`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Navigation Logic ---
+            const navBtns = document.querySelectorAll('.nav-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            navBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active from all buttons and tabs
+                    navBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(t => t.classList.remove('active'));
+
+                    // Add active to clicked button and corresponding tab
+                    btn.classList.add('active');
+                    const targetId = btn.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+
+            // --- Accordion Logic ---
+            const accordions = document.querySelectorAll('.accordion-btn');
+            accordions.forEach(acc => {
+                acc.addEventListener('click', function() {
+                    // Toggle current
+                    this.classList.toggle('active');
+                    const arrow = this.querySelector('span:last-child');
+
+                    if (this.classList.contains('active')) {
+                        arrow.style.transform = 'rotate(180deg)';
+                    } else {
+                        arrow.style.transform = 'rotate(0deg)';
+                    }
+                });
+            });
+
+            // --- Chart.js Initializations ---
+
+            // 1. Industry Donut Chart
+            const ctxIndustry = document.getElementById('industryChart').getContext('2d');
+            new Chart(ctxIndustry, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Fashion/Apparel', 'Retail/FMCG', 'Beauty & Cosmetics', 'Hospitality', 'Other'],
+                    datasets: [{
+                        data: [35, 30, 20, 10, 5],
+                        backgroundColor: [
+                            '#0f172a', // slate-900
+                            '#334155', // slate-700
+                            '#0ea5e9', // sky-500
+                            '#14b8a6', // teal-500
+                            '#cbd5e1'  // slate-300
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.label + ': ' + context.parsed + '%';
+                                }
+                            }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+
+            // 2. Comparison Radar Chart
+            const ctxRadar = document.getElementById('comparisonChart').getContext('2d');
+            new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: ['API Flexibility', 'Omnichannel', 'Ease of Setup', 'Total Cost', 'Time to Value'],
+                    datasets: [
+                        {
+                            label: 'Antavo',
+                            data: [9, 9, 4, 3, 4], // High flexibility, low ease/cost/speed
+                            fill: true,
+                            backgroundColor: 'rgba(15, 23, 42, 0.2)',
+                            borderColor: '#0f172a',
+                            pointBackgroundColor: '#0f172a',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#0f172a'
+                        },
+                        {
+                            label: 'Our Proposed Solution',
+                            data: [7, 7, 9, 8, 9], // Good flexibility, high ease/cost/speed
+                            fill: true,
+                            backgroundColor: 'rgba(20, 184, 166, 0.2)',
+                            borderColor: '#14b8a6',
+                            pointBackgroundColor: '#14b8a6',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#14b8a6'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0,0,0,0.1)' },
+                            grid: { color: 'rgba(0,0,0,0.1)' },
+                            pointLabels: {
+                                font: { size: 11, family: "'Segoe UI', sans-serif" },
+                                color: '#475569'
+                            },
+                            ticks: { display: false, min: 0, max: 10 }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // --- AI Tool Logic ---
+
+            // 1. Email Generator
+            const btnGenerateEmail = document.getElementById('btn-generate-email');
+            const emailOutputContainer = document.getElementById('email-output-container');
+            const emailOutput = document.getElementById('email-output');
+            const emailError = document.getElementById('email-error');
+
+            btnGenerateEmail.addEventListener('click', async () => {
+                const industry = document.getElementById('email-industry').value;
+                const painPoint = document.getElementById('email-pain').value || "high total cost of ownership and slow implementation";
+                const tone = document.getElementById('email-tone').value;
+
+                // UI Loading state
+                const originalText = btnGenerateEmail.innerHTML;
+                btnGenerateEmail.innerHTML = '<span class="spinner"></span> Generating...';
+                btnGenerateEmail.disabled = true;
+                emailError.classList.add('hidden');
+                emailOutputContainer.classList.add('hidden');
+
+                const systemPrompt = "You are an elite enterprise software account executive. Your goal is to write cold outreach emails that convince companies using 'Antavo' (a loyalty cloud software) to take a meeting with you to discuss switching to your superior platform.";
+                const userPrompt = `Draft a cold email to a VP of Loyalty at a company in the ${industry} industry.
+                They are currently using Antavo.
+                Focus the core of the message on attacking this specific pain point they might be feeling with Antavo: ${painPoint}.
+                Make the tone of the email: ${tone}.
+                Include a clear, low-friction call to action. Do not include subject lines, just the body. Keep it concise.`;
+
+                try {
+                    const responseText = await callGeminiAPI(userPrompt, systemPrompt);
+                    emailOutput.value = responseText.trim();
+                    emailOutputContainer.classList.remove('hidden');
+                } catch (error) {
+                    console.error("Gemini API Error:", error);
+                    emailError.textContent = "Failed to generate email. Please try again later.";
+                    emailError.classList.remove('hidden');
+                } finally {
+                    btnGenerateEmail.innerHTML = originalText;
+                    btnGenerateEmail.disabled = false;
+                }
+            });
+
+            // 2. Objection Handler
+            const btnHandleObjection = document.getElementById('btn-handle-objection');
+            const objectionOutputContainer = document.getElementById('objection-output-container');
+            const objectionOutput = document.getElementById('objection-output');
+            const objectionError = document.getElementById('objection-error');
+
+            btnHandleObjection.addEventListener('click', async () => {
+                const objection = document.getElementById('objection-input').value;
+                if (!objection.trim()) {
+                    objectionError.textContent = "Please enter an objection first.";
+                    objectionError.classList.remove('hidden');
+                    return;
+                }
+
+                // UI Loading state
+                const originalText = btnHandleObjection.innerHTML;
+                btnHandleObjection.innerHTML = '<span class="spinner"></span> Formulating...';
+                btnHandleObjection.disabled = true;
+                objectionError.classList.add('hidden');
+                objectionOutputContainer.classList.add('hidden');
+
+                const systemPrompt = "You are a tactical sales strategist. Your company competes against 'Antavo', an enterprise loyalty platform known for being headless, API-first, but having high implementation costs and slow time-to-value.";
+                const userPrompt = `A prospect currently using or evaluating Antavo just gave me this objection:
+                "${objection}"
+
+                Provide a concise, powerful 3-point counter-argument I can use right now to overcome this objection. Format it clearly with bolding for emphasis.`;
+
+                try {
+                    const responseText = await callGeminiAPI(userPrompt, systemPrompt);
+                    objectionOutput.innerHTML = parseMarkdown(responseText);
+                    objectionOutputContainer.classList.remove('hidden');
+                } catch (error) {
+                    console.error("Gemini API Error:", error);
+                    objectionError.textContent = "Failed to formulate response. Please try again later.";
+                    objectionError.classList.remove('hidden');
+                } finally {
+                    btnHandleObjection.innerHTML = originalText;
+                    btnHandleObjection.disabled = false;
+                }
+            });
+
+        });
+    </script>
 </body>
 </html>
